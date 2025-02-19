@@ -8,5 +8,5 @@ llm = ChatOpenAI(
     max_tokens=256,
     streaming=False,
     api_key=os.getenv("TFY_API_KEY"),
-    base_url=os.getenv("TFY_HOST"),
+    base_url=os.getenv("LLM_GATEWAY_URL"),
 )
