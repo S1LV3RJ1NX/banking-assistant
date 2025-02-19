@@ -11,11 +11,11 @@ class UserAccounts(BaseModel):
 
     accounts: list[Account]
 
-    def get_account_names(self) -> list[str]:
+    async def get_account_names(self) -> list[str]:
         """Returns a list of the names of all accounts."""
         return [account.name for account in self.accounts]
 
-    def get_account(self, account_name: str) -> Account:
+    async def get_account(self, account_name: str) -> Account:
         """Returns the account with the given name.
 
         Raises:
@@ -30,7 +30,7 @@ class UserAccounts(BaseModel):
         )
         raise ValueError(error_message)
     
-    def transfer_money(self, amount: float, source_acc_name: str, dest_acc_name: str) -> None:
+    async def transfer_money(self, amount: float, source_acc_name: str, dest_acc_name: str) -> None:
         """Transfers money from one account to another.
 
         Raises:

@@ -4,10 +4,11 @@ from src.prompt import prompt_template
 
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
+from langchain_core.messages import AIMessage
 
 memory = MemorySaver()
 
-agent = create_react_agent(
+AGENT = create_react_agent(
     model=llm, 
     tools=tools, 
     state_modifier=prompt_template,
@@ -15,17 +16,42 @@ agent = create_react_agent(
 )
 
 
-def print_stream(stream):
-    for s in stream:
-        message = s["messages"][-1]
-        if isinstance(message, tuple):
-            print(message)
-        else:
-            message.pretty_print()
+async def get_ai_response(events):
+    for event in reversed(events):
+        if event.get("messages"):
+            last_message = event["messages"][-1]
+            if isinstance(last_message, AIMessage) and not last_message.tool_calls:
+                try:
+                    content = last_message.content
+                    if isinstance(content, str):
+                        return content
+                    elif isinstance(content, list):
+                        return " ".join([str(item) for sublist in content for item in sublist])
+                    elif isinstance(content, dict):
+                        return " ".join([str(v) for k, v in content.items() if isinstance(v, str)])
+                    else:
+                        return str(content)
+                except Exception as e:
+                    return str(e)
+                
+    return None
 
-def run_agent(thread_id: str, user_input: str):
+def print_event(event):
+    message = event.get("messages", [])
+    if message:
+        if isinstance(message, list):
+            message = message[-1]
+        message.pretty_print()
+
+async def run_agent(thread_id: str, user_input: str):
 
     config = {"configurable": {"thread_id": thread_id}}
     inputs = {"messages": [("user", user_input)]}
 
-    print_stream(agent.stream(inputs, config=config, stream_mode="values"))
+    events = []
+    async for event in AGENT.astream(inputs, config=config, stream_mode="values"):
+        print_event(event)
+        events.append(event)
+
+    response = await get_ai_response(events)
+    return {'response': response}
