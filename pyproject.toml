@@ -8,6 +8,7 @@ dependencies = [
     "fastapi>=0.115.8",
     "langchain-openai>=0.3.6",
     "langgraph>=0.2.73",
+    "pre-commit>=4.1.0",
     "python-dotenv>=1.0.1",
     "uvicorn>=0.34.0",
 ]

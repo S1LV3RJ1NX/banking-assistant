@@ -9,10 +9,7 @@ from langchain_core.messages import AIMessage
 memory = MemorySaver()
 
 AGENT = create_react_agent(
-    model=llm, 
-    tools=tools, 
-    state_modifier=prompt_template,
-    checkpointer=memory
+    model=llm, tools=tools, state_modifier=prompt_template, checkpointer=memory
 )
 
 
@@ -26,15 +23,20 @@ async def get_ai_response(events):
                     if isinstance(content, str):
                         return content
                     elif isinstance(content, list):
-                        return " ".join([str(item) for sublist in content for item in sublist])
+                        return " ".join(
+                            [str(item) for sublist in content for item in sublist]
+                        )
                     elif isinstance(content, dict):
-                        return " ".join([str(v) for k, v in content.items() if isinstance(v, str)])
+                        return " ".join(
+                            [str(v) for k, v in content.items() if isinstance(v, str)]
+                        )
                     else:
                         return str(content)
                 except Exception as e:
                     return str(e)
-                
+
     return None
+
 
 def print_event(event):
     message = event.get("messages", [])
@@ -42,6 +44,7 @@ def print_event(event):
         if isinstance(message, list):
             message = message[-1]
         message.pretty_print()
+
 
 async def run_agent(thread_id: str, user_input: str):
 
@@ -54,4 +57,4 @@ async def run_agent(thread_id: str, user_input: str):
         events.append(event)
 
     response = await get_ai_response(events)
-    return {'response': response}
+    return {"response": response}

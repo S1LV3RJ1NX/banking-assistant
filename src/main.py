@@ -21,16 +21,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/health-check")
 def status():
     return JSONResponse(content={"status": "OK"})
 
 
-class UserInput(BaseModel): 
+class UserInput(BaseModel):
     thread_id: str
     user_input: str
+
 
 @app.post("/run_agent")
 async def run_agent_endpoint(user_input: UserInput):
     return await run_agent(user_input.thread_id, user_input.user_input)
-

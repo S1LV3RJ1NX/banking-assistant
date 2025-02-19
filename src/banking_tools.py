@@ -5,18 +5,20 @@ from src.accounts_model import UserAccounts, Account
 USER_ACCOUNTS = UserAccounts(
     accounts=[
         Account(name="current-account", balance=100),
-        Account(name="savings-account", balance=3_0)
+        Account(name="savings-account", balance=3_0),
     ]
 )
+
 
 @tool
 async def list_accounts() -> str:
     """List the names of the user's accounts."""
     return await USER_ACCOUNTS.get_account_names()
 
+
 @tool
 async def get_account_balance(account_name: str) -> str:
-    """Get the balance of one of the user accounts by its exact name.""" 
+    """Get the balance of one of the user accounts by its exact name."""
     try:
         account = await USER_ACCOUNTS.get_account(account_name)
         return f"${account.balance}"
@@ -25,7 +27,9 @@ async def get_account_balance(account_name: str) -> str:
 
 
 @tool
-async def transfer_money(amount: float, source_account: str, destination_account: str) -> str:
+async def transfer_money(
+    amount: float, source_account: str, destination_account: str
+) -> str:
     """Transfer money between two accounts."""
     try:
         await USER_ACCOUNTS.transfer_money(amount, source_account, destination_account)
@@ -33,8 +37,5 @@ async def transfer_money(amount: float, source_account: str, destination_account
     except ValueError as error:
         return f"{error}"
 
-tools = [
-    list_accounts, 
-    get_account_balance,
-    transfer_money
-]
+
+tools = [list_accounts, get_account_balance, transfer_money]
