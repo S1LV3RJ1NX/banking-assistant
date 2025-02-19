@@ -29,7 +29,7 @@ def initialize_session_state():
         st.session_state.messages = [
             {
                 "role": "assistant",
-                "content": "I'm your Truefoundry Banking Assistant. How may I help you?",
+                "content": "I'm your Banking Assistant. How may I help you?",
             }
         ]
 
