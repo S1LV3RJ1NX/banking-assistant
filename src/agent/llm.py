@@ -1,0 +1,12 @@
+import os
+from langchain_openai import ChatOpenAI
+
+
+llm = ChatOpenAI(
+    model="openai-main/gpt-4o-mini",
+    temperature=0.1,
+    max_tokens=256,
+    streaming=False,
+    api_key=os.getenv("TFY_API_KEY"),
+    base_url=os.getenv("TFY_HOST"),
+)
