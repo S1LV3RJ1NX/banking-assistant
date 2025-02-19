@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 
-from src.agent import run_agent
+from src.agent.graph import run_agent
 
 app = FastAPI(
     title="Backend for RAG",
